@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosApi from '../../axiosAPI.ts';
 
-interface Todo {
+export interface Todo {
   id: string;
   title: string;
   completed: boolean;
@@ -18,6 +18,12 @@ const initialState: TodoState = {
   loading: false,
   error: false,
 };
+
+export const toggleTodo = createAsyncThunk('todos/toggleTodo', async (todo: Todo) => {
+  const updatedTodo = { ...todo, completed: !todo.completed };
+  await axiosApi.put(`/todos/${todo.id}.json`, updatedTodo);
+  return updatedTodo;
+});
 
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   const response = await axiosApi.get<{ [key: string]: Todo }>('/todos.json');
@@ -58,6 +64,12 @@ const todoSlice = createSlice({
     });
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       state.items = state.items.filter((todo) => todo.id !== action.payload);
+    });
+    builder.addCase(toggleTodo.fulfilled, (state, action) => {
+      const index = state.items.findIndex((todo) => todo.id === action.payload.id);
+      if (index !== -1) {
+        state.items[index] = action.payload;
+      }
     });
   },
 });

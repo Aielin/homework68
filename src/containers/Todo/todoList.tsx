@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store.ts';
-import { addTodo, fetchTodos, deleteTodo } from './todoSlice.ts';
+import { addTodo, fetchTodos, deleteTodo, toggleTodo, Todo } from './todoSlice.ts';
 
 
 const TodoList: React.FC = () => {
@@ -25,6 +25,10 @@ const TodoList: React.FC = () => {
     dispatch(deleteTodo(id));
   };
 
+  const handleToggleTodo = (todo: Todo) => {
+    dispatch(toggleTodo(todo));
+  };
+
   return (
     <div className="container mt-4">
       <h2 className="text-center">Todo List</h2>
@@ -39,7 +43,11 @@ const TodoList: React.FC = () => {
           {todos.map((todo) => (
             <li key={todo.id} className="list-group-item d-flex align-items-center justify-content-between">
               <div>
-                <input type="checkbox" checked={todo.completed} readOnly className="me-3"/>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggleTodo(todo)}
+                  className="me-3"/>
                 <span>{todo.title}</span>
               </div>
               <button className="btn btn-danger btn-sm" onClick={() => handleDeleteTodo(todo.id)}>
