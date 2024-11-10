@@ -41,7 +41,7 @@ const TodoList: React.FC = () => {
       ) : (
         <ul className="list-group mb-3">
           {todos.map((todo) => (
-            <li key={todo.id} className="list-group-item d-flex align-items-center justify-content-between">
+            <li key={todo.id} className="mb-1 opacity-75 list-group-item d-flex align-items-center justify-content-between">
               <div>
                 <input
                   type="checkbox"
