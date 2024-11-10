@@ -31,6 +31,10 @@ export const addTodo = createAsyncThunk('todos/addTodo', async (title: string) =
   return { id: response.data.name, ...newTodo };
 });
 
+export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id: string) => {
+  await axiosApi.delete(`/todos/${id}.json`);
+  return id;
+});
 
 const todoSlice = createSlice({
   name: 'todos',
@@ -51,6 +55,9 @@ const todoSlice = createSlice({
     });
     builder.addCase(addTodo.fulfilled, (state, action) => {
       state.items.push(action.payload);
+    });
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      state.items = state.items.filter((todo) => todo.id !== action.payload);
     });
   },
 });

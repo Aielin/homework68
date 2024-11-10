@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store.ts';
-import { addTodo, fetchTodos } from './todoSlice.ts';
+import { addTodo, fetchTodos, deleteTodo } from './todoSlice.ts';
 
 
 const TodoList: React.FC = () => {
@@ -21,6 +21,10 @@ const TodoList: React.FC = () => {
     }
   };
 
+  const handleDeleteTodo = (id: string) => {
+    dispatch(deleteTodo(id));
+  };
+
   return (
     <div className="container mt-4">
       <h2 className="text-center">Todo List</h2>
@@ -31,11 +35,16 @@ const TodoList: React.FC = () => {
           </div>
         </div>
       ) : (
-        <ul className="list-group mb-3 mt-5">
+        <ul className="list-group mb-3">
           {todos.map((todo) => (
-            <li key={todo.id} className="list-group-item d-flex align-items-center">
-              <input type="checkbox" checked={todo.completed} readOnly className="me-3"/>
-              <span>{todo.title}</span>
+            <li key={todo.id} className="list-group-item d-flex align-items-center justify-content-between">
+              <div>
+                <input type="checkbox" checked={todo.completed} readOnly className="me-3"/>
+                <span>{todo.title}</span>
+              </div>
+              <button className="btn btn-danger btn-sm" onClick={() => handleDeleteTodo(todo.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>
